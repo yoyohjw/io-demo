@@ -1,0 +1,11 @@
+socket 与 server socket
+
+
+                          bind
+                           ↑
+浏览器     connect ->   accept     服务器
+                   ↓        ↓
+             I/O        ->       I/O
+                        <-
+              ↓
+            close
