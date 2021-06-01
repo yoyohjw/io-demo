@@ -1,0 +1,7 @@
+BIO编程模型
+
+Client1     ->                                    ->     handler1   (实际上是handler1和client1做数据输入输出)
+Client2     ->                                    ->     handler2
+                    Acceptor(接受客户发来连接请求的函数，创建处理线程实际处理)
+Client3     ->                                    ->     handler3
+Client4     ->                                    ->     handler4
