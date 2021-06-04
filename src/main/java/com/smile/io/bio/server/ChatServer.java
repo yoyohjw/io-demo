@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author hjw
@@ -21,11 +23,15 @@ public class ChatServer {
     private final int DEFAULT_PORT = 8888;
     private final String QUIT = "quit";
 
+    /**添加线程池**/
+    private ExecutorService executorService;
+
     private ServerSocket serverSocket;
     /**保存在线客户相关消息**/
     private Map<Integer, Writer> connectedClient;
 
     public ChatServer(){
+        executorService = Executors.newFixedThreadPool(10);
         connectedClient = new HashMap<>();
     }
 
@@ -115,8 +121,9 @@ public class ChatServer {
                 //等待客户端连接
                 Socket socket = serverSocket.accept();
                 //创建handler的线程
-                new Thread(new ChatHandler(this, socket)).start();
-
+//                new Thread(new ChatHandler(this, socket)).start();
+                //用线程池提高性能
+                executorService.execute(new ChatHandler(this, socket));
             }
 
         } catch (IOException e) {

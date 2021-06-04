@@ -1,0 +1,5 @@
+NIO编程模型
+
+Client1     ->        accept(Selector接收用户端发来的accept请求)
+                      Selector                     ->     handler(Selector会通过Handler处理accept或read等请求)
+Client2     ->       read(创建读状态通道)   read(创建读状态通道)

@@ -1,0 +1,43 @@
+非阻塞式NIO
+
+1.使用Channel（Channel是双向的，即可读取，也可写入  同时它可以是阻塞或者非阻塞的）代替Stream
+2.使用Selector监控多条Channel
+3.在一条线程里面处理多个Channel I/O
+
+
+
+Channel 与 Buffer  (向Channel读写数据时，需要通过Buffer来执行)
+
+Buffer：Buffer内部有三个指针式的结构
+1.position（指示目前所在位置）
+2.limit（当有一个全新的Buffer对象等待写入数据时，指向和capacity相同位置）
+3.capacity（代表Buffer对象最大容量）
+
+如果将Buffer从写模式改为读模式 则需要调用 flip()方法
+如果调用该方法，那么position指针就会指向初始位置，limit指针会指向position指向的写入位置
+
+当一口气读取完成后，可以调用clear()方法
+该方法不会清除数据，只会将三个指针还原到初始位置
+
+如果数据没有读取完，但是又想在之后读取，可以调用compact()方法
+该方法会将未读取的数据放置到头部，position指针会被放置在未读取数据之后的位置
+
+Channel:几个Channel之间可以互相进行数据交换
+几个重要的Channel举例：
+1.FileChannel
+2.ServerSocketChannel
+3.SocketChannel
+
+
+
+Selector 与 Channel
+Channel需要注册在Selector，那么这个Selector就可去监视注册的Channel
+
+Channel的状态有：connect  accept  read   write
+
+                        SelectorKey
+Channel -> Selector ->  1.interestOps()  -> 注册的状态
+                        2.readyOps()   ->  有哪些监听的状态目前是可操作的
+                        3.channel()    ->  返回注册的Channel这个对象
+                        4.selector()   ->   返回的是在哪个Selector对象上完成的注册
+                        5.attachment()   ->   可以在已注册的Channel对象上增加一个对象
